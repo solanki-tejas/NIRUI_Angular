@@ -1,0 +1,53 @@
+<div class="flex h-full w-full">
+  <div class="flex flex-1 items-center justify-center">
+    <p-card
+      class="m-4 text-2xl w-[450px]"
+      [style]="{
+        borderRadius: '20px'
+      }"
+    >
+      <!-- Logo section -->
+      <div class="flex justify-center mb-4">
+        <img src="../../../../assets/logo.png" alt="Logo" class="h-16 w-auto" />
+      </div>
+
+      <h1 class="text-center text-xl">Welcome</h1>
+
+      <form
+        (ngSubmit)="onSubmit()"
+        #loginForm="ngForm"
+        class="flex flex-col gap-4"
+      >
+        <div class="flex flex-col gap-1">
+          <label class="font-bold" htmlFor="username">Username</label>
+          <input
+            pInputText
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="font-bold" htmlFor="password">Password</label>
+          <input
+            pInputText
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+            type="password"
+          />
+        </div>
+
+        <p-button
+          type="submit"
+          label="Login"
+          [loading]="submitLoading"
+          styleClass="w-full"
+        />
+      </form>
+    </p-card>
+  </div>
+</div>
