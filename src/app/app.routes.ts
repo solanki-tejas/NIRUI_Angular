@@ -16,15 +16,37 @@ export const routes: Routes = [
             (m) => m.HomeComponent
           ),
       },
+
       {
-        path: 'detail/:id',
+        path: 'message/:id',
         loadComponent: () =>
           import('./pages/private/detail-view/detail-view.component').then(
             (m) => m.DetailViewComponent
           ),
       },
       {
-        path: "",
+        path: 'messages',
+        loadComponent: () =>
+          import(
+            './pages/private/message-screen/message-screen.component'
+          ).then((m) => m.MessageScreenComponent),
+      },
+      {
+        path: 'settings/versions',
+        loadComponent: () =>
+          import('./pages/private/versions/versions.component').then(
+            (m) => m.VersionsComponent
+          ),
+      },
+      {
+        path: 'settings/api-configuration',
+        loadComponent: () =>
+          import(
+            './pages/private/api-configuration/api-configuration.component'
+          ).then((m) => m.ApiConfigurationComponent),
+      },
+      {
+        path: '',
         redirectTo: 'home',
         pathMatch: 'full',
       },

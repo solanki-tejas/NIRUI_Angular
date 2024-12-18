@@ -1,0 +1,17 @@
+<div class="p-3 h-[80vh] w-screen">
+    <div class="flex items-center justify-center mb-4">
+      <h2 class="text-2xl font-bold">API Configuration</h2>
+    </div>
+    <div *ngIf="loading" class="flex justify-center items-center h-full">
+      <div class="text-blue-500 text-lg">Loading...</div>
+    </div>
+    <div *ngIf="!loading && configData" class="max-w-4xl mx-auto">
+      <!-- <h3 class="text-lg font-semibold mb-4">Fetched Configuration:</h3> -->
+      <div class="bg-gray-100 p-4 rounded-lg border border-gray-300">
+        <div *ngFor="let key of objectKeys(configData)" class="grid grid-cols-2 gap-4 py-2">
+          <span class="font-medium text-gray-700">{{ key }}</span>
+          <span class="text-gray-600">{{ configData[key] }}</span>
+        </div>
+      </div>
+    </div>
+  </div>

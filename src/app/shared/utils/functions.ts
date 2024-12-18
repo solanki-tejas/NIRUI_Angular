@@ -18,4 +18,12 @@ export function formatTimestamp(timestamp: string | null): string {
   if (!timestamp) return 'NA';
 
   const datePipe = new DatePipe('en-US'); // Create a new DatePipe instance
-  return datePipe.transform(timestamp, 'dd/MM/yyyy HH:mm') ?? 'NA';}
+  return datePipe.transform(timestamp, 'dd/MM/yyyy HH:mm') ?? 'NA';
+}
+
+export function formatDate(timestamp: string | null): string {
+  if (!timestamp) return 'NA';
+
+  const datePipe = new DatePipe('en-US'); // Create a new DatePipe instance
+  return datePipe.transform(timestamp, 'dd/MM/yyyy') ?? 'NA';
+}

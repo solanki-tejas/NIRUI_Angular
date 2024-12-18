@@ -9,9 +9,15 @@ import { ConfigService } from './config.service'; // Import ConfigService
 })
 export class ApiService {
   private apiUrl: string;
+  private configURL = 'assets/config.json'; // Path to your JSON file
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.apiUrl = this.configService.apiUrl; // Load the API URL dynamically
+  }
+
+  // GET Configs
+  getAPIConfig(): Observable<any> {
+    return this.http.get<any>(this.configURL);
   }
 
   // GET request

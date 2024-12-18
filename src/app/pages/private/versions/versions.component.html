@@ -1,0 +1,104 @@
+<div class="p-3 bg-white">
+  <div class="flex items-center justify-center">
+    <!-- <div></div> -->
+    <h2>Versions Log</h2>
+    <!-- <p-button (click)="showDialog()" label="Add" /> -->
+  </div>
+
+  <p-table
+    [value]="versions"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [loading]="loading"
+    selectionMode="single"
+    (onRowSelect)="onRowSelect($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 20%">Date</th>
+        <th style="width: 20%">Version</th>
+        <th style="width: 60%">Info</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr [pSelectableRow]="item">
+        <td>
+          {{ item.date ? getFormatDate(item.date) : "-" }}
+        </td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.plainDescription }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center p-3">No records found</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    header="Add/Edit Version"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '50rem', height: '30rem' }"
+    closeOnEscape="true"
+  >
+    <form (ngSubmit)="onSubmit()" class="space-y-6">
+      <div>
+        <label for="name" class="block text-sm font-semibold text-gray-700">
+          Version Name
+        </label>
+        <input
+          pInputText
+          id="name"
+          class="block w-full p-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [(ngModel)]="currentVersion.name"
+          name="name"
+          required
+        />
+      </div>
+      <div>
+        <label
+          for="plainDescription"
+          class="block text-sm font-semibold text-gray-700"
+        >
+          Plain Description
+        </label>
+        <textarea
+          id="plainDescription"
+          rows="11"
+          class="block w-full p-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [(ngModel)]="currentVersion.plainDescription"
+          name="plainDescription"
+          required
+        ></textarea>
+      </div>
+      <!-- <div>
+        <label
+          for="description"
+          class="block text-sm font-semibold text-gray-700"
+        >
+          HTML Description
+        </label>
+        <textarea
+          id="description"
+          rows="3"
+          class="block w-full p-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [(ngModel)]="currentVersion.description"
+          name="description"
+          required
+        ></textarea>
+      </div> -->
+      <div class="flex justify-end gap-4">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          (click)="visible = false"
+          class="bg-gray-500 text-white"
+        />
+        <p-button label="Save" class="bg-blue-500 text-white" type="submit" />
+      </div>
+    </form>
+  </p-dialog>
+</div>

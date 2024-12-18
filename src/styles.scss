@@ -26,3 +26,31 @@ body {
 .grid {
   margin: 0 !important;
 }
+
+.navbar-component {
+  .p-menubar {
+    padding: 0px;
+    background: transparent !important;
+    border: none;
+    * {
+      color: white;
+    }
+  }
+
+  .p-menuitem-content {
+    background: transparent;
+  }
+
+  .p-menuitem-content:hover {
+    background: transparent;
+  }
+
+  .p-submenu-list {
+    color: black !important;
+    background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  }
+
+  .p-menuitem-link {
+    padding: 10px;
+  }
+}

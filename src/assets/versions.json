@@ -1,0 +1,22 @@
+[
+  {
+    "name": "V1.0",
+    "plainDescription": "Project setup & UI integration",
+    "date": "10/23/2024"
+  },
+  {
+    "name": "V1.1",
+    "plainDescription": "API Integration",
+    "date": "11/28/2024"
+  },
+  {
+    "name": "V1.2",
+    "plainDescription": "Change Log Page Added & API Issues Resolved",
+    "date": "12/2/2024"
+  },
+  {
+    "name": "V1.3",
+    "plainDescription": "Navigation Links & API Configuration Page Added.",
+    "date": "12/18/2024"
+  }
+]

@@ -1,18 +1,29 @@
-<div class="flex justify-between items-center bg-gray-800 p-3">
-  <div class="flex justify-center">
-    <img src="../../../../assets/logo.png" alt="Logo" class="h-12 w-auto" />
+<div
+  class="navbar-component flex justify-between items-center bg-gray-800 py-4 px-3"
+>
+  <div class="flex justify-center cursor-pointer">
+    <img
+      src="../../../../assets/main_logo.jpg"
+      alt="Logo"
+      class="h-14 w-auto rounded-md"
+      (click)="navigateHome()"
+    />
   </div>
 
   <!-- Start Section for Logo -->
-  <div class="flex align-items-center">
+  <div class="flex-1 flex justify-center items-center px-4 min-h-full relative">
+    <div class="absolute left-10 bottom-[-30px]">
+      <p-menubar [model]="items" />
+    </div>
     <span class="font-bold text-xl text-white"
       >NETLINK INTEGRATION PLATFORM</span
     >
-    <!-- Placeholder for logo text -->
   </div>
 
   <div class="flex item-center gap-5 text-white">
-    <h3 class="">V1.3</h3>
+    <button class="bg-none" (click)="navigateVersion()">
+      <h3 class="">V1.3</h3>
+    </button>
     <p-button
       (onClick)="logout()"
       severity="danger"

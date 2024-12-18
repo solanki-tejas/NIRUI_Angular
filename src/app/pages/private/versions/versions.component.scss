@@ -1,0 +1,50 @@
+// .change-log-container {
+//   width: 80%;
+//   margin: 20px auto;
+//   font-family: Arial, sans-serif;
+// }
+
+// h1 {
+//   text-align: center;
+//   background-color: #333;
+//   color: white;
+//   padding: 10px;
+//   border-radius: 5px;
+// }
+
+// .change-log-table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   margin-top: 20px;
+//   table-layout: fixed; /* Ensures the specified widths are respected */
+// }
+
+// .change-log-table thead {
+//   background-color: #4caf50;
+//   color: white;
+// }
+
+// .change-log-table th,
+// .change-log-table td {
+//   padding: 10px;
+//   text-align: left;
+//   border: 1px solid #ddd;
+// }
+
+// .change-log-table th:nth-child(1), /* Version column */
+//   .change-log-table td:nth-child(1) {
+//   width: 10%; /* Make the version column smaller */
+// }
+// .change-log-table th:nth-child(2), /* Version column */
+//   .change-log-table td:nth-child(2) {
+//   width: 20%; /* Make the version column smaller */
+// }
+
+// .change-log-table th:nth-child(3), /* Info column */
+//   .change-log-table td:nth-child(3) {
+//   width: 50%; /* Make the info column larger */
+// }
+
+// .change-log-table tr:nth-child(even) {
+//   background-color: #f9f9f9;
+// }
