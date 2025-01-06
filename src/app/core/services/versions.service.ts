@@ -16,7 +16,7 @@ export interface Version {
 export class VersionService {
   private jsonUrl = 'assets/versions.json'; // Path to your JSON file
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Get all versions
   getVersions(): Observable<Version[]> {
@@ -61,6 +61,12 @@ export class VersionService {
   deleteVersion(name: string): Observable<Version[]> {
     return this.getVersions().pipe(
       map((versions) => versions.filter((version) => version.name !== name))
+    );
+  }
+
+  getLastVersion(): Observable<Version | undefined> {
+    return this.getVersions().pipe(
+      map((versions) => versions[versions.length - 1]) // Return the last element
     );
   }
 }

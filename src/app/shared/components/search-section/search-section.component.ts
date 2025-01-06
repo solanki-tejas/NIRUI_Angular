@@ -8,6 +8,7 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { generateQueryString } from '../../utils/functions';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from 'src/app/core/services/data.service';
+import { Log, LogsService } from 'src/app/core/services/log.service';
 
 @Component({
   selector: 'app-search-section',
@@ -38,8 +39,9 @@ export class SearchSectionComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private dataService: DataService
-  ) { }
+    private dataService: DataService,
+    private logsService: LogsService
+  ) {}
 
   ngOnInit(): void {
     // Initialize the form group with existing search query or default values
@@ -47,7 +49,9 @@ export class SearchSectionComponent implements OnInit {
 
     this.formGroup = new FormGroup({
       flowType: new FormControl(existingSearchQuery.flowType),
-      translationDirection: new FormControl(existingSearchQuery.translationDirection),
+      translationDirection: new FormControl(
+        existingSearchQuery.translationDirection
+      ),
       creationTimestampFrom: new FormControl(
         existingSearchQuery.creationTimestampFrom
           ? new Date(existingSearchQuery.creationTimestampFrom)
@@ -67,21 +71,75 @@ export class SearchSectionComponent implements OnInit {
   }
 
   search(): void {
-    this.dataService.setLoadingState(true)
+    this.dataService.setLoadingState(true);
 
-    const queryParams = generateQueryString(this.dataService.getSearchQuery());
+    const searchQuery = this.dataService.getSearchQuery();
+    const queryParams = generateQueryString(searchQuery);
     const urlToPass = 'messages/search' + queryParams;
 
     this.apiService.getData(urlToPass).subscribe({
       next: (data) => {
         this.dataService.setTableData(data.nipMessageList); // Store in DataService
-        this.dataService.setLoadingState(false)
+        this.dataService.setLoadingState(false);
 
+        // Constructing a detailed log message
+        const constraints = [];
+
+        if (searchQuery.flowType) {
+          constraints.push(`Flow Type: ${searchQuery.flowType}`);
+        }
+
+        if (searchQuery.translationDirection) {
+          constraints.push(
+            `Translation Direction: ${searchQuery.translationDirection}`
+          );
+        }
+
+        if (searchQuery.creationTimestampFrom) {
+          constraints.push(
+            `Creation From: ${new Date(
+              searchQuery.creationTimestampFrom
+            ).toLocaleString()}`
+          );
+        }
+
+        if (searchQuery.creationTimestampTo) {
+          constraints.push(
+            `Creation To: ${new Date(
+              searchQuery.creationTimestampTo
+            ).toLocaleString()}`
+          );
+        }
+
+        const logMessage =
+          constraints.length > 0
+            ? `Message searched with constraints: ${constraints.join(', ')}`
+            : 'Message searched with no constraints';
+
+        const newLog: Log = {
+          datetime: new Date().toISOString(),
+          logtype: 'Message Search',
+          log: logMessage,
+        };
+
+        this.logsService.addLog(newLog);
       },
       error: (error) => {
         console.error('Error fetching data:', error);
-        this.dataService.setLoadingState(false)
 
+        this.dataService.setLoadingState(false);
+
+        const errorLogMessage = `API Error occurred while searching messages. Error Details: ${
+          error.message || 'Unknown Error'
+        }`;
+
+        const errorLog: Log = {
+          datetime: new Date().toISOString(),
+          logtype: 'Error',
+          log: errorLogMessage,
+        };
+
+        this.logsService.addLog(errorLog);
       },
     });
   }

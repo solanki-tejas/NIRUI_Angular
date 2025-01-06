@@ -3,6 +3,7 @@ import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { importProvidersFrom } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Async function to load config
 async function loadConfig() {
@@ -16,7 +17,7 @@ async function loadConfig() {
 
     // Inject the loaded config as a provider
     appConfig.providers.push(
-      importProvidersFrom(HttpClientModule),
+      importProvidersFrom(HttpClientModule, BrowserAnimationsModule),
       { provide: 'APP_CONFIG', useValue: config }
     );
 

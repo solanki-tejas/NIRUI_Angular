@@ -18,5 +18,10 @@
     "name": "V1.3",
     "plainDescription": "Navigation Links & API Configuration Page Added.",
     "date": "12/18/2024"
+  },
+  {
+    "name": "V1.4",
+    "plainDescription": "Logs Page Added & Pretty Print in Messages",
+    "date": "01/01/2025"
   }
 ]

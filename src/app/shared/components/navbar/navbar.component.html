@@ -22,7 +22,7 @@
 
   <div class="flex item-center gap-5 text-white">
     <button class="bg-none" (click)="navigateVersion()">
-      <h3 class="">V1.3</h3>
+      <h3 class="">{{ lastVersion.name ?? "V1.3" }}</h3>
     </button>
     <p-button
       (onClick)="logout()"

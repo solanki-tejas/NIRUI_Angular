@@ -39,6 +39,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'settings/logs',
+        loadComponent: () =>
+          import('./pages/private/logs/logs.component').then(
+            (m) => m.LogsComponent
+          ),
+      },
+      {
         path: 'settings/api-configuration',
         loadComponent: () =>
           import(

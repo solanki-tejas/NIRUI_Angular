@@ -45,7 +45,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Request ID</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.requestId ? 'text-gray-900' : 'text-gray-400'
@@ -62,7 +62,7 @@
               <h3 class="text-sm font-semibold text-gray-500">
                 Creation Timestamp
               </h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.creationTimestamp
@@ -79,7 +79,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Flow Type</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="details.flowType ? 'text-gray-900' : 'text-gray-400'"
                 >
@@ -92,7 +92,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Sender BIC</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.senderBic ? 'text-gray-900' : 'text-gray-400'
@@ -107,7 +107,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Receiver BIC</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.receiverBic ? 'text-gray-900' : 'text-gray-400'
@@ -122,7 +122,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Status Code</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.statusCode ? 'text-gray-900' : 'text-gray-400'
@@ -137,7 +137,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Status Reason</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.statusReason ? 'text-gray-900' : 'text-gray-400'
@@ -152,7 +152,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Sender DN</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="details.senderDn ? 'text-gray-900' : 'text-gray-400'"
                 >
@@ -165,7 +165,7 @@
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Receiver DN</h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.receiverDn ? 'text-gray-900' : 'text-gray-400'
@@ -182,7 +182,7 @@
               <h3 class="text-sm font-semibold text-gray-500">
                 Output Message Type
               </h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.outputMessageType
@@ -201,7 +201,7 @@
               <h3 class="text-sm font-semibold text-gray-500">
                 Translation Direction
               </h3>
-              <p class="mt-1 text-sm font-medium">
+              <p class="mt-1 text-sm font-medium break-words">
                 <span
                   [class]="
                     details.translationDirection
@@ -222,20 +222,18 @@
           >
             Message Data
           </h3>
+
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             <div
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
             >
               <h3 class="text-sm font-semibold text-gray-500">Input Message</h3>
-              <p class="mt-1 text-sm font-medium text-gray-900 break-words">
-                <span
-                  [class]="
-                    details.inputMessage ? 'text-gray-900' : 'text-gray-400'
-                  "
-                >
-                  {{ details.inputMessage || "NA" }}
-                </span>
-              </p>
+              <pre
+                class="text-sm font-medium text-gray-900 break-words overflow-auto p-2 bg-gray-100 rounded border"
+              >
+                <code [innerHTML]="prettyPrint(details.inputMessage) || 'NA'"></code>
+              </pre>
+              
             </div>
             <div
               class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
@@ -243,15 +241,11 @@
               <h3 class="text-sm font-semibold text-gray-500">
                 Output Message
               </h3>
-              <p class="mt-1 text-sm font-medium text-gray-900">
-                <span
-                  [class]="
-                    details.outputMessage ? 'text-gray-900' : 'text-gray-400'
-                  "
-                >
-                  {{ details.outputMessage || "NA" }}
-                </span>
-              </p>
+              <pre
+                class="text-sm font-medium text-gray-900 break-words overflow-auto p-2 bg-gray-100 rounded border"
+              >
+                <code [innerHTML]="prettyPrint(details.outputMessage) || 'NA'"></code>
+              </pre>
             </div>
           </div>
         </div>

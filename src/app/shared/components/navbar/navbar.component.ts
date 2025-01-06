@@ -8,6 +8,7 @@ import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Version, VersionService } from 'src/app/core/services/versions.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,8 +28,9 @@ import { FormsModule } from '@angular/forms';
 export class NavbarComponent {
   items: MenuItem[];
   searchTerm = '';
+  lastVersion: Version
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, private versionService: VersionService) {
     this.items = [
       {
         label: 'Message Screen',
@@ -52,9 +54,21 @@ export class NavbarComponent {
             command: () => this.routeToPage('settings/api-configuration'),
             // icon: 'pi pi-server',
           },
+          {
+            label: 'Logs',
+            // icon: 'pi pi-bolt',
+            route: '/logs',
+            command: () => this.routeToPage('settings/logs'),
+          },
         ],
       },
     ];
+  }
+
+  ngOnInit() {
+    this.versionService.getLastVersion().subscribe((data) => {
+      this.lastVersion = data;
+    });
   }
 
   routeToPage(path: string) {
@@ -66,7 +80,7 @@ export class NavbarComponent {
   }
 
   navigateVersion(): void {
-    this.router.navigate(['/versions']);
+    this.router.navigate(['/settings/versions']);
   }
 
   navigateHome() {
