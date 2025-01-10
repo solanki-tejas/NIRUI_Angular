@@ -27,3 +27,7 @@ export function formatDate(timestamp: string | null): string {
   const datePipe = new DatePipe('en-US'); // Create a new DatePipe instance
   return datePipe.transform(timestamp, 'dd/MM/yyyy') ?? 'NA';
 }
+
+export const formatDateToISO = (date: Date) => {
+  return date ? new Date(date).toISOString().slice(0, 19) : null; // Keep only 'YYYY-MM-DDTHH:mm:ss'
+}

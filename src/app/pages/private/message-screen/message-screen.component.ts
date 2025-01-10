@@ -38,16 +38,16 @@ export class MessageScreenComponent {
     private router: Router,
     private apiService: ApiService,
     private dataService: DataService // Inject DataService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Subscribe to tableData updates from DataService
-    this.dataService.getTableDataObservable().subscribe((data) => {
+    this.dataService.getTableDataObservable("messages").subscribe((data) => {
       this.searchResults = data;
     });
 
     // Check if there's existing data in the service
-    const cachedData = this.dataService.getTableData();
+    const cachedData = this.dataService.getTableData("messages");
     if (cachedData.length > 0) {
       this.searchResults = cachedData;
     } else {
@@ -56,26 +56,26 @@ export class MessageScreenComponent {
     }
 
     // Subscribe to loading updates from DataService
-    this.dataService.getLoadingStateObservable().subscribe((data) => {
+    this.dataService.getLoadingStateObservable("messages").subscribe((data) => {
       this.loading = data;
     });
   }
 
   loadData(): void {
-    this.dataService.setLoadingState(true);
-    const queryParams = generateQueryString(this.dataService.getSearchQuery());
+    this.dataService.setLoadingState("messages", true);
+    const queryParams = generateQueryString(this.dataService.getSearchQuery("messages"));
     const urlToPass = 'messages/search' + queryParams;
 
     this.apiService.getData(urlToPass).subscribe({
       next: (data) => {
         this.searchResults = data.nipMessageList; // Assuming the response structure matches
-        this.dataService.setTableData(this.searchResults); // Store in DataService
-        this.dataService.setLoadingState(false);
+        this.dataService.setTableData("messages", this.searchResults); // Store in DataService
+        this.dataService.setLoadingState("messages", false);
         // this.loading = false;
       },
       error: (error) => {
         console.error('Error fetching data:', error);
-        this.dataService.setLoadingState(false);
+        this.dataService.setLoadingState("messages", false);
         // this.loading = false;
       },
     });

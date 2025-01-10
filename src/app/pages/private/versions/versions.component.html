@@ -24,10 +24,10 @@
     <ng-template pTemplate="body" let-item>
       <tr [pSelectableRow]="item">
         <td>
-          {{ item.date ? getFormatDate(item.date) : "-" }}
+          {{ item.changeDate ? getFormatDate(item.changeDate) : "-" }}
         </td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.plainDescription }}</td>
+        <td>{{ item.version }}</td>
+        <td>{{ item.info }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
@@ -46,31 +46,31 @@
   >
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <div>
-        <label for="name" class="block text-sm font-semibold text-gray-700">
+        <label for="version" class="block text-sm font-semibold text-gray-700">
           Version Name
         </label>
         <input
           pInputText
-          id="name"
+          id="version"
           class="block w-full p-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          [(ngModel)]="currentVersion.name"
-          name="name"
+          [(ngModel)]="currentVersion.version"
+          name="version"
           required
         />
       </div>
       <div>
         <label
-          for="plainDescription"
+          for="info"
           class="block text-sm font-semibold text-gray-700"
         >
           Plain Description
         </label>
         <textarea
-          id="plainDescription"
+          id="info"
           rows="11"
           class="block w-full p-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          [(ngModel)]="currentVersion.plainDescription"
-          name="plainDescription"
+          [(ngModel)]="currentVersion.info"
+          name="info"
           required
         ></textarea>
       </div>

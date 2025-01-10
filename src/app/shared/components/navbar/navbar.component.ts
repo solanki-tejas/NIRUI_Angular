@@ -9,6 +9,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Version, VersionService } from 'src/app/core/services/versions.service';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,35 +31,40 @@ export class NavbarComponent {
   searchTerm = '';
   lastVersion: Version
 
-  constructor(private authService: AuthService, private router: Router, private versionService: VersionService) {
+  constructor(private authService: AuthService, private router: Router, private versionService: VersionService, private apiService: ApiService) {
     this.items = [
       {
-        label: 'Message Screen',
+        label: 'Message Search',
         command: () => this.routeToPage('messages'),
         // icon: 'pi pi-envelope',
       },
-
       {
         label: 'Settings',
         // icon: 'pi pi-gear',
         items: [
-          {
-            label: 'Change Log',
-            // icon: 'pi pi-bolt',
-            route: '/versions',
-            command: () => this.routeToPage('settings/versions'),
-          },
           {
             label: 'API Configuration',
             route: '/api-configuration',
             command: () => this.routeToPage('settings/api-configuration'),
             // icon: 'pi pi-server',
           },
+        ],
+      },
+      {
+        label: 'Monitoring',
+        // icon: 'pi pi-gear',
+        items: [
           {
-            label: 'Logs',
+            label: 'Change Log',
+            // icon: 'pi pi-bolt',
+            route: '/versions',
+            command: () => this.routeToPage('monitoring/change-logs'),
+          },
+          {
+            label: 'Application Log',
             // icon: 'pi pi-bolt',
             route: '/logs',
-            command: () => this.routeToPage('settings/logs'),
+            command: () => this.routeToPage('monitoring/application-logs'),
           },
         ],
       },
@@ -66,9 +72,22 @@ export class NavbarComponent {
   }
 
   ngOnInit() {
-    this.versionService.getLastVersion().subscribe((data) => {
-      this.lastVersion = data;
+    const urlToPass = 'changelog/search';
+    this.apiService.getData(urlToPass).subscribe({
+      next: (data) => {
+        if (data.length) {
+          let lastVersionData = data[data.length - 1];
+          this.lastVersion = lastVersionData
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+      },
     });
+
+    // this.versionService.getLastVersion().subscribe((data) => {
+    //   this.lastVersion = data;
+    // });
   }
 
   routeToPage(path: string) {
@@ -80,7 +99,7 @@ export class NavbarComponent {
   }
 
   navigateVersion(): void {
-    this.router.navigate(['/settings/versions']);
+    this.router.navigate(['/monitoring/change-logs']);
   }
 
   navigateHome() {

@@ -5,10 +5,16 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from 'src/app/core/services/api.service';
-import { generateQueryString } from '../../utils/functions';
+import { formatDateToISO, generateQueryString } from '../../utils/functions';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from 'src/app/core/services/data.service';
 import { Log, LogsService } from 'src/app/core/services/log.service';
+import {
+  ApplicationLog,
+  LogLevel,
+  LogType,
+} from 'src/app/core/models/response.types';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-search-section',
@@ -18,6 +24,7 @@ import { Log, LogsService } from 'src/app/core/services/log.service';
     DropdownModule,
     CalendarModule,
     CheckboxModule,
+    InputTextModule,
     ButtonModule,
     ReactiveFormsModule,
   ],
@@ -45,7 +52,7 @@ export class SearchSectionComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize the form group with existing search query or default values
-    const existingSearchQuery = this.dataService.getSearchQuery();
+    const existingSearchQuery = this.dataService.getSearchQuery('messages');
 
     this.formGroup = new FormGroup({
       flowType: new FormControl(existingSearchQuery.flowType),
@@ -66,21 +73,25 @@ export class SearchSectionComponent implements OnInit {
 
     // Sync form changes with the DataService
     this.formGroup.valueChanges.subscribe((formValue) => {
-      this.dataService.updateSearchQuery(formValue);
+      this.dataService.updateSearchQuery('messages', {
+        ...formValue,
+        creationTimestampFrom: formatDateToISO(formValue.creationTimestampFrom),
+        creationTimestampTo: formatDateToISO(formValue.creationTimestampTo),
+      });
     });
   }
 
   search(): void {
-    this.dataService.setLoadingState(true);
+    this.dataService.setLoadingState('messages', true);
 
-    const searchQuery = this.dataService.getSearchQuery();
+    const searchQuery = this.dataService.getSearchQuery('messages');
     const queryParams = generateQueryString(searchQuery);
     const urlToPass = 'messages/search' + queryParams;
 
     this.apiService.getData(urlToPass).subscribe({
       next: (data) => {
-        this.dataService.setTableData(data.nipMessageList); // Store in DataService
-        this.dataService.setLoadingState(false);
+        this.dataService.setTableData('messages', data.nipMessageList); // Store in DataService
+        this.dataService.setLoadingState('messages', false);
 
         // Constructing a detailed log message
         const constraints = [];
@@ -116,30 +127,38 @@ export class SearchSectionComponent implements OnInit {
             ? `Message searched with constraints: ${constraints.join(', ')}`
             : 'Message searched with no constraints';
 
-        const newLog: Log = {
-          datetime: new Date().toISOString(),
-          logtype: 'Message Search',
-          log: logMessage,
+        const newLog: ApplicationLog = {
+          logType: LogType.MESSAGE_SEARCH,
+          logLevel: LogLevel.INFO,
+          description: logMessage,
         };
 
-        this.logsService.addLog(newLog);
+        const urlToPass = 'logs/insert';
+        this.apiService.postData(urlToPass, newLog).subscribe({
+          next: (response) => {},
+          error: (err) => console.error('Error creating user:', err),
+        });
       },
       error: (error) => {
         console.error('Error fetching data:', error);
 
-        this.dataService.setLoadingState(false);
+        this.dataService.setLoadingState('messages', false);
 
         const errorLogMessage = `API Error occurred while searching messages. Error Details: ${
           error.message || 'Unknown Error'
         }`;
 
-        const errorLog: Log = {
-          datetime: new Date().toISOString(),
-          logtype: 'Error',
-          log: errorLogMessage,
+        const newLog: ApplicationLog = {
+          logType: LogType.MESSAGE_SEARCH,
+          logLevel: LogLevel.ERROR,
+          description: errorLogMessage,
         };
 
-        this.logsService.addLog(errorLog);
+        const urlToPass = 'logs/insert';
+        this.apiService.postData(urlToPass, newLog).subscribe({
+          next: (response) => {},
+          error: (err) => console.error('Error creating user:', err),
+        });
       },
     });
   }

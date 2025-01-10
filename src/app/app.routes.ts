@@ -32,14 +32,14 @@ export const routes: Routes = [
           ).then((m) => m.MessageScreenComponent),
       },
       {
-        path: 'settings/versions',
+        path: 'monitoring/change-logs',
         loadComponent: () =>
           import('./pages/private/versions/versions.component').then(
             (m) => m.VersionsComponent
           ),
       },
       {
-        path: 'settings/logs',
+        path: 'monitoring/application-logs',
         loadComponent: () =>
           import('./pages/private/logs/logs.component').then(
             (m) => m.LogsComponent

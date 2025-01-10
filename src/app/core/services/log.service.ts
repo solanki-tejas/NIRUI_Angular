@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 
 export interface Log {
   datetime: string; // ISO string for date and time
-  logtype: string; // e.g., 'info', 'error', 'debug'
+  logType: string; // e.g., 'info', 'error', 'debug'
   log: string; // Actual log message
 }
 

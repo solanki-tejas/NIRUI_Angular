@@ -12,17 +12,24 @@
 
   <!-- Start Section for Logo -->
   <div class="flex-1 flex justify-center items-center px-4 min-h-full relative">
-    <div class="absolute left-10 bottom-[-30px]">
+    <div class="absolute left-10 bottom-[-35px]">
       <p-menubar [model]="items" />
     </div>
-    <span class="font-bold text-xl text-white"
-      >NETLINK INTEGRATION PLATFORM</span
-    >
+    <div class="relative">
+      <span class="font-bold text-xl text-white"
+        >NETLINK INTEGRATION PLATFORM</span
+      >
+      <div class="absolute bottom-[-100%] w-full grid place-content-center">
+        <span class="font-bold text-base text-white "
+          >IPLA REPLACEMENT</span
+        >
+      </div>
+    </div>
   </div>
 
   <div class="flex item-center gap-5 text-white">
     <button class="bg-none" (click)="navigateVersion()">
-      <h3 class="">{{ lastVersion.name ?? "V1.3" }}</h3>
+      <h3 class="">{{ lastVersion?.version ?? "V1.4" }}</h3>
     </button>
     <p-button
       (onClick)="logout()"

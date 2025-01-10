@@ -10,6 +10,7 @@ import {
 } from 'src/app/core/services/versions.service';
 import { formatDate, formatTimestamp } from 'src/app/shared/utils/functions';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Component({
   selector: 'app-versions',
@@ -23,20 +24,32 @@ export class VersionsComponent {
   loading = false;
   visible: boolean = false;
   currentVersion: Version = {
-    name: '',
-    plainDescription: '',
-    description: '',
-    date: '',
+    version: '',
+    info: '',
+    changeDate: '',
   };
 
-  constructor(private versionService: VersionService, private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) { }
 
   fetchVersions() {
     this.loading = true;
-    this.versionService.getVersions().subscribe((data) => {
-      this.versions = data.reverse();
-      this.loading = false;
+    const urlToPass = 'changelog/search';
+
+    this.apiService.getData(urlToPass).subscribe({
+      next: (data) => {
+        this.versions = Array.isArray(data) ? data.reverse() : [];
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+        this.loading = false;
+      },
     });
+    // this.loading = true;
+    // this.versionService.getVersions().subscribe((data) => {
+    //   this.versions = data.reverse();
+    //   this.loading = false;
+    // });
   }
 
   ngOnInit() {
@@ -50,19 +63,18 @@ export class VersionsComponent {
   showDialog() {
     this.visible = true;
     this.currentVersion = {
-      name: '',
-      plainDescription: '',
-      description: '',
-      date: '',
+      version: '',
+      info: '',
+      changeDate: '',
     }; // Reset form
   }
 
   onSubmit() {
-    if (this.currentVersion.name) {
-      this.versionService.addVersion(this.currentVersion).subscribe(() => {
-        this.fetchVersions();
-        this.visible = false;
-      });
+    if (this.currentVersion.version) {
+      // this.versionService.addVersion(this.currentVersion).subscribe(() => {
+      //   this.fetchVersions();
+      //   this.visible = false;
+      // });
     }
   }
 

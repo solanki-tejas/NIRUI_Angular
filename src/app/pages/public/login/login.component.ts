@@ -5,7 +5,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../core/services/auth.service';
-import { Log, LogsService } from 'src/app/core/services/log.service';
 
 @Component({
   selector: 'app-login',
@@ -25,21 +24,11 @@ export class LoginComponent {
   password = '';
   submitLoading = false;
 
-  constructor(
-    private authService: AuthService,
-    private logsService: LogsService
-  ) {}
+  constructor(private authService: AuthService) {}
 
   onSubmit(): void {
     this.submitLoading = true;
     this.authService.login(this.username, this.password);
-
-    const newLog: Log = {
-      datetime: new Date().toISOString(),
-      logtype: 'Login',
-      log: 'Admin is logged in.',
-    };
-    this.logsService.addLog(newLog);
 
     setTimeout(() => {
       this.submitLoading = false;

@@ -1,0 +1,30 @@
+::ng-deep {
+    .search-tabs .p-tabview-nav {
+      @apply border-b border-gray-200;
+    }
+  
+    .search-tabs .p-tabview-nav li .p-tabview-nav-link {
+      @apply text-xs py-2 px-4;
+    }
+  
+    .p-dropdown-panel {
+      @apply text-xs;
+    }
+  
+    .p-calendar .p-datepicker {
+      @apply text-xs;
+    }
+  
+    .p-checkbox .p-checkbox-box {
+      @apply w-4 h-4;
+    }
+  
+    .p-button.p-button-sm {
+      @apply py-1 px-3;
+    }
+  
+    .p-tabview .p-tabview-panels{
+      padding-left: 0px !important;
+    }
+  }
+  

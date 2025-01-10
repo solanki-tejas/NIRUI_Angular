@@ -1,82 +1,115 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Root } from '../models/response.types';
+import { formatDateToISO } from 'src/app/shared/utils/functions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  private tableData = new BehaviorSubject<Root[]>([]); // Reactive tableData
-  private loading = new BehaviorSubject<boolean>(false); // Reactive loading
-  private searchQuery = new BehaviorSubject<any>(this.getDefaultSearchQuery());
+  private tableDataMap = new Map<string, BehaviorSubject<any[]>>(); // Map for table data
+  private loadingMap = new Map<string, BehaviorSubject<boolean>>(); // Map for loading states
+  private searchQueryMap = new Map<string, BehaviorSubject<any>>(); // Map for search queries
+  private defaultQueries = new Map<string, any>(); // Map for storing default queries
 
-  constructor() { }
-
-  // Table Data Methods
-  setTableData(data: Root[]): void {
-    this.tableData.next(data); // Update the BehaviorSubject
-  }
-
-  getTableData(): Root[] {
-    return this.tableData.getValue(); // Get the current value
-  }
-
-  getTableDataObservable() {
-    return this.tableData.asObservable(); // Observable for components to subscribe
-  }
-
-  clearTableData(): void {
-    this.tableData.next([]); // Clear and notify subscribers
-  }
-
-  // Search Query Methods
-  updateSearchQuery(data: any): void {
-    // Ensure timestamps are stored in ISO 8601 format
-    const formattedQuery = {
-      ...data,
-      creationTimestampFrom: this.formatDateToISO(data.creationTimestampFrom),
-      creationTimestampTo: this.formatDateToISO(data.creationTimestampTo),
-    };
-    this.searchQuery.next(formattedQuery); // Notify subscribers
-  }
-
-  getSearchQuery(): any {
-    return this.searchQuery.getValue();
-  }
-
-  getSearchQueryObservable() {
-    return this.searchQuery.asObservable();
-  }
-
-  // Default Search Query
-  private getDefaultSearchQuery(): any {
+  constructor() {
     const currentDate = new Date();
     const twentyFourHoursAgo = new Date(currentDate);
     twentyFourHoursAgo.setHours(currentDate.getHours() - 24);
 
-    return {
+    this.setDefaultQuery('messages', {
       flowType: null,
       translationDirection: null,
-      creationTimestampFrom: this.formatDateToISO(twentyFourHoursAgo),
-      creationTimestampTo: this.formatDateToISO(currentDate),
-    };
+      creationTimestampFrom: formatDateToISO(twentyFourHoursAgo),
+      creationTimestampTo: formatDateToISO(currentDate),
+    });
+
+    this.setDefaultQuery('application-logs', {
+      logLevel: null,
+      logType: null,
+      logDateFrom: formatDateToISO(twentyFourHoursAgo),
+      logDateTo: formatDateToISO(currentDate),
+    });
   }
 
-  // Helper Method to Format Date to ISO String
-  private formatDateToISO(date: Date): string {
-    return date ? new Date(date).toISOString().slice(0, 19) : null; // Keep only 'YYYY-MM-DDTHH:mm:ss'
+  // Table Data Methods
+  setTableData(tableKey: string, data: any[]): void {
+    if (!this.tableDataMap.has(tableKey)) {
+      this.tableDataMap.set(tableKey, new BehaviorSubject<any[]>([]));
+    }
+    this.tableDataMap.get(tableKey)!.next(data); // Update the table data
   }
 
-  // Loading
-  getLoadingState() {
-    return this.loading.getValue()
+  getTableData(tableKey: string): any[] {
+    return this.tableDataMap.get(tableKey)?.getValue() || [];
   }
 
-  getLoadingStateObservable() {
-    return this.loading.asObservable(); // Observable for components to subscribe
+  getTableDataObservable(tableKey: string) {
+    if (!this.tableDataMap.has(tableKey)) {
+      this.tableDataMap.set(tableKey, new BehaviorSubject<any[]>([]));
+    }
+    return this.tableDataMap.get(tableKey)!.asObservable();
   }
 
-  setLoadingState(data: boolean): void {
-    this.loading.next(data); // Update the BehaviorSubject
+  clearTableData(tableKey: string): void {
+    if (this.tableDataMap.has(tableKey)) {
+      this.tableDataMap.get(tableKey)!.next([]);
+    }
   }
+
+  // Search Query Methods
+  setDefaultQuery(tableKey: string, defaultQuery: any): void {
+    this.defaultQueries.set(tableKey, defaultQuery); // Store the default query for the table
+    if (!this.searchQueryMap.has(tableKey)) {
+      this.searchQueryMap.set(tableKey, new BehaviorSubject<any>(defaultQuery));
+    }
+  }
+
+  updateSearchQuery(tableKey: string, query: any): void {
+    if (!this.searchQueryMap.has(tableKey)) {
+      const defaultQuery = this.defaultQueries.get(tableKey) || {};
+      this.searchQueryMap.set(tableKey, new BehaviorSubject<any>(defaultQuery));
+    }
+    this.searchQueryMap.get(tableKey)!.next(query); // Update the search query
+  }
+
+  getSearchQuery(tableKey: string): any {
+    const defaultQuery = this.defaultQueries.get(tableKey) || {};
+    return this.searchQueryMap.get(tableKey)?.getValue() || defaultQuery;
+  }
+
+  getSearchQueryObservable(tableKey: string) {
+    if (!this.searchQueryMap.has(tableKey)) {
+      const defaultQuery = this.defaultQueries.get(tableKey) || {};
+      this.searchQueryMap.set(tableKey, new BehaviorSubject<any>(defaultQuery));
+    }
+    return this.searchQueryMap.get(tableKey)!.asObservable();
+  }
+
+  resetSearchQuery(tableKey: string): void {
+    const defaultQuery = this.defaultQueries.get(tableKey) || {};
+    if (this.searchQueryMap.has(tableKey)) {
+      this.searchQueryMap.get(tableKey)!.next(defaultQuery);
+    }
+  }
+
+  // Loading Methods
+  getLoadingState(tableKey: string): boolean {
+    return this.loadingMap.get(tableKey)?.getValue() || false;
+  }
+
+  getLoadingStateObservable(tableKey: string) {
+    if (!this.loadingMap.has(tableKey)) {
+      this.loadingMap.set(tableKey, new BehaviorSubject<boolean>(false));
+    }
+    return this.loadingMap.get(tableKey)!.asObservable();
+  }
+
+  setLoadingState(tableKey: string, state: boolean): void {
+    if (!this.loadingMap.has(tableKey)) {
+      this.loadingMap.set(tableKey, new BehaviorSubject<boolean>(false));
+    }
+    this.loadingMap.get(tableKey)!.next(state);
+  }
+
+
 }
