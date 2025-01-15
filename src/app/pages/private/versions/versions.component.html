@@ -5,38 +5,43 @@
     <!-- <p-button (click)="showDialog()" label="Add" /> -->
   </div>
 
-  <p-table
-    [value]="versions"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    [loading]="loading"
-    selectionMode="single"
-    (onRowSelect)="onRowSelect($event)"
+  <div
+    class="m-2 lg:m-4 shadow-sm overflow-hidden rounded-lg border-[1px] border-solid border-[#004d85]"
+    [@fadeInDown]
   >
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 20%">Date</th>
-        <th style="width: 20%">Version</th>
-        <th style="width: 60%">Info</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-item>
-      <tr [pSelectableRow]="item">
-        <td>
-          {{ item.changeDate ? getFormatDate(item.changeDate) : "-" }}
-        </td>
-        <td>{{ item.version }}</td>
-        <td>{{ item.info }}</td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="7" class="text-center p-3">No records found</td>
-      </tr>
-    </ng-template>
-  </p-table>
-
+    <p-table
+      [value]="versions"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [loading]="loading"
+      selectionMode="single"
+      (onRowSelect)="onRowSelect($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 20%">Date</th>
+          <th style="width: 20%">Version</th>
+          <th style="width: 60%">Info</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr [pSelectableRow]="item">
+          <td>
+            {{ item.changeDate ? getFormatDate(item.changeDate) : "-" }}
+          </td>
+          <td>{{ item.version }}</td>
+          <td>{{ item.info }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center p-3">No records found</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
   <p-dialog
     header="Add/Edit Version"
     [modal]="true"
@@ -59,10 +64,7 @@
         />
       </div>
       <div>
-        <label
-          for="info"
-          class="block text-sm font-semibold text-gray-700"
-        >
+        <label for="info" class="block text-sm font-semibold text-gray-700">
           Plain Description
         </label>
         <textarea

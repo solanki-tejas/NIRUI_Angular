@@ -1,0 +1,52 @@
+.preview-container {
+  /* Additional styling if needed */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.preview-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.preview-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.preview-container::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.dialog-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    font-size: 14px;
+  }
+  

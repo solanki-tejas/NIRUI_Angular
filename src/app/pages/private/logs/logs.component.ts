@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +19,17 @@ import * as XLSX from 'xlsx';  // Import xlsx library
   imports: [CommonModule, TableModule, ButtonModule, DialogModule, FormsModule, SearchApplicationLogsComponent],
   templateUrl: './logs.component.html',
   styleUrl: './logs.component.scss',
+  animations: [
+    trigger('fadeInDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate(
+          '1s 0.2s ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class LogsComponent {
   searchResults: ApplicationLog[] = [];

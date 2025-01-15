@@ -8,7 +8,6 @@ import { ApiService } from 'src/app/core/services/api.service';
 import { formatDateToISO, generateQueryString } from '../../utils/functions';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DataService } from 'src/app/core/services/data.service';
-import { Log, LogsService } from 'src/app/core/services/log.service';
 import {
   ApplicationLog,
   LogLevel,
@@ -47,7 +46,6 @@ export class SearchSectionComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private dataService: DataService,
-    private logsService: LogsService
   ) {}
 
   ngOnInit(): void {

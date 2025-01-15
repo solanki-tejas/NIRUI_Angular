@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, SimpleChanges } from '@angular/core';
+import { NavigationEnd, NavigationStart, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
@@ -27,44 +27,57 @@ import { ApiService } from 'src/app/core/services/api.service';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
-  items: MenuItem[];
-  searchTerm = '';
-  lastVersion: Version
+  items: MenuItem[] = [];
+  lastVersion: any;
 
-  constructor(private authService: AuthService, private router: Router, private versionService: VersionService, private apiService: ApiService) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private apiService: ApiService
+  ) {
     this.items = [
       {
         label: 'Message Search',
-        command: () => this.routeToPage('messages'),
-        // icon: 'pi pi-envelope',
+        route: 'messages',
+        command: () => {
+          this.routeToPage('messages');
+          this.updateActiveClasses();
+        },
       },
       {
         label: 'Settings',
-        // icon: 'pi pi-gear',
+        route: 'settings',
         items: [
           {
             label: 'API Configuration',
-            route: '/api-configuration',
-            command: () => this.routeToPage('settings/api-configuration'),
-            // icon: 'pi pi-server',
+            route: 'settings/api-configuration',
+            command: () => {
+              this.routeToPage('settings/api-configuration');
+              this.updateActiveClasses();
+            },
           },
         ],
       },
       {
         label: 'Monitoring',
-        // icon: 'pi pi-gear',
+        route: 'monitoring',
         items: [
           {
             label: 'Change Log',
-            // icon: 'pi pi-bolt',
-            route: '/versions',
-            command: () => this.routeToPage('monitoring/change-logs'),
+            route: 'monitoring/change-logs',
+            command: () => {
+              this.routeToPage('monitoring/change-logs')
+              this.updateActiveClasses();
+            },
+
           },
           {
             label: 'Application Log',
-            // icon: 'pi pi-bolt',
-            route: '/logs',
-            command: () => this.routeToPage('monitoring/application-logs'),
+            route: 'monitoring/application-logs',
+            command: () => {
+              this.routeToPage('monitoring/application-logs')
+              this.updateActiveClasses();
+            },
           },
         ],
       },
@@ -72,22 +85,77 @@ export class NavbarComponent {
   }
 
   ngOnInit() {
+    this.updateActiveClasses(); // Initial setup
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.updateActiveClasses(); // Update on route change
+      }
+    });
+
     const urlToPass = 'changelog/search';
     this.apiService.getData(urlToPass).subscribe({
       next: (data) => {
-        if (data.length) {
-          let lastVersionData = data[data.length - 1];
-          this.lastVersion = lastVersionData
+        if (Array.isArray(data) && data.length) {
+          // Sort by `changeDate` in descending order
+          const sortedData = data.sort((a, b) => {
+            const dateA = new Date(a.changeDate).getTime();
+            const dateB = new Date(b.changeDate).getTime();
+            return dateB - dateA; // Descending order
+          });
+
+          // Assign the latest version based on sorted order
+          this.lastVersion = sortedData[0];
         }
       },
-      error: (error) => {
-        console.error('Error fetching data:', error);
-      },
+      error: (error) => console.error('Error fetching data:', error),
     });
+  }
 
-    // this.versionService.getLastVersion().subscribe((data) => {
-    //   this.lastVersion = data;
+  ngOnChanges(changes: SimpleChanges): void {
+    // if (changes['data']) {
+    // Side effect when data input changes
+    console.log('Data changed:', changes);
+    // }
+  }
+
+  updateActiveMenuItem() {
+    // const currentUrl = this.router.url;
+
+    // this.items.forEach((item: any) => {
+    //   const isParentActive = currentUrl.startsWith(`/${item.route}`);
+    //   item.styleClass = isParentActive ? 'active-link' : '';
+
+    //   item.items?.forEach((subItem) => {
+    //     const isSubItemActive = currentUrl.startsWith(`/${subItem.route}`);
+    //     subItem.styleClass = isSubItemActive ? 'active-link' : '';
+
+    //     // If any child is active, ensure the parent is active
+    //     if (isSubItemActive) {
+    //       item.styleClass = 'active-link';
+    //     }
+    //   });
     // });
+  }
+
+  updateActiveClasses() {
+    this.items.forEach((item: any) => {
+      if (this.router.url.includes(item.route)) {
+        item.styleClass = 'active-route'; // Add 'active' class or use any relevant class for active route
+      } else {
+        item.styleClass = ''; // Remove any class for inactive routes
+      }
+
+      // For nested items
+      if (item.items) {
+        item.items.forEach(subItem => {
+          if (this.router.url.includes(subItem.route)) {
+            subItem.styleClass = 'active-route'; // Add 'active' class for nested routes
+          } else {
+            subItem.styleClass = ''; // Remove class for inactive nested routes
+          }
+        });
+      }
+    });
   }
 
   routeToPage(path: string) {
@@ -105,4 +173,6 @@ export class NavbarComponent {
   navigateHome() {
     this.router.navigate(['/home']);
   }
+
+
 }

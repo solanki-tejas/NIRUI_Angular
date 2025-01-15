@@ -11,6 +11,7 @@ import {
 import { formatDate, formatTimestamp } from 'src/app/shared/utils/functions';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/core/services/api.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-versions',
@@ -18,6 +19,17 @@ import { ApiService } from 'src/app/core/services/api.service';
   imports: [CommonModule, TableModule, ButtonModule, DialogModule, FormsModule],
   templateUrl: './versions.component.html',
   styleUrl: './versions.component.scss',
+  animations: [
+    trigger('fadeInDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate(
+          '1s 0.2s ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class VersionsComponent {
   versions: Version[] = [];
@@ -37,7 +49,16 @@ export class VersionsComponent {
 
     this.apiService.getData(urlToPass).subscribe({
       next: (data) => {
-        this.versions = Array.isArray(data) ? data.reverse() : [];
+        if (Array.isArray(data)) {
+          // Sort the data by `changeDate` in descending order
+          this.versions = data.sort((a, b) => {
+            const dateA = new Date(a.changeDate).getTime();
+            const dateB = new Date(b.changeDate).getTime();
+            return dateB - dateA; // Descending order
+          });
+        } else {
+          this.versions = [];
+        }
         this.loading = false;
       },
       error: (error) => {
@@ -45,11 +66,6 @@ export class VersionsComponent {
         this.loading = false;
       },
     });
-    // this.loading = true;
-    // this.versionService.getVersions().subscribe((data) => {
-    //   this.versions = data.reverse();
-    //   this.loading = false;
-    // });
   }
 
   ngOnInit() {
