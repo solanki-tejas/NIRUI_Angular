@@ -30,13 +30,13 @@ export class ApiService {
   // POST request
   postData(endpoint: string, body: any): Observable<any> {
     return this.http
-      .post(`${this.apiUrl}/${endpoint}`, body)
+      .post(`${this.apiUrl}/${endpoint}`, body, { responseType: 'text' })
       .pipe(catchError(this.handleError));
   }
 
   // Error handling
   private handleError(error: HttpErrorResponse) {
-    console.error('An error occurred:', error.message);
+    console.error('An error occurred:', error);
     return throwError('Something went wrong. Please try again later.');
   }
 }

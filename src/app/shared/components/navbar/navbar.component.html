@@ -1,5 +1,5 @@
 <div
-  class="navbar-component flex justify-between items-center bg-gray-800 py-4 px-3"
+  class="navbar-component flex justify-between items-center bg-[#004d85] py-3 px-3"
 >
   <div class="flex justify-center cursor-pointer">
     <img
@@ -12,15 +12,18 @@
 
   <!-- Start Section for Logo -->
   <div class="flex-1 flex justify-center items-center px-4 min-h-full relative">
-    <div class="absolute left-10 bottom-[-35px]">
-      <p-menubar [model]="items" />
+    <div class="absolute left-10 bottom-[-40px] z-10">
+      <p-menubar [model]="[items[0], items[1]]" />
     </div>
-    <div class="relative">
-      <span class="font-bold text-xl text-white"
-        >NETLINK INTEGRATION PLATFORM</span
-      >
-      <div class="absolute bottom-[-100%] w-full grid place-content-center">
-        <span class="font-bold text-base text-white "
+    <div class="absolute right-10 bottom-[-40px] z-10">
+      <p-menubar [model]="[items[2]]" />
+    </div>
+    <div class="relative w-full flex justify-center items-center">
+      <div class="absolute w-full grid place-content-center">
+        <span class="font-bold text-xl text-white"
+          >NETLINK INTEGRATION PLATFORM</span
+        >
+        <span class="font-bold text-base text-white text-center"
           >IPLA REPLACEMENT</span
         >
       </div>
@@ -29,14 +32,14 @@
 
   <div class="flex item-center gap-5 text-white">
     <button class="bg-none" (click)="navigateVersion()">
-      <h3 class="">{{ lastVersion?.version ?? "V1.4" }}</h3>
+      <h3 class="">{{ lastVersion?.version ?? "V1.6" }}</h3>
     </button>
     <p-button
       (onClick)="logout()"
       severity="danger"
       label="Log Out"
-      [outlined]="true"
-      class="flex"
+      class="flex py-3"
+      size="small"
     />
   </div>
   <!-- <div class="card flex justify-content-center">

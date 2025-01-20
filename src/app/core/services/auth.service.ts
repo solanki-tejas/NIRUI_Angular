@@ -31,7 +31,8 @@ export class AuthService {
 
       const urlToPass = 'logs/insert';
       this.apiService.postData(urlToPass, newLog).subscribe({
-        next: (response) => {},
+        next: (response) => {
+        },
         error: (err) => console.error('Error creating log:', err),
       });
 

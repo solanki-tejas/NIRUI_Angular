@@ -4,14 +4,28 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, DatePipe } from '@angular/common';
 import { formatTimestamp } from 'src/app/shared/utils/functions';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { DialogModule } from 'primeng/dialog';
+
 
 @Component({
   selector: 'app-detail-view',
   standalone: true,
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, DialogModule],
   templateUrl: './detail-view.component.html',
   styleUrl: './detail-view.component.scss',
   providers: [DatePipe],
+  animations: [
+    trigger('fadeInDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate(
+          '1s 0.2s ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class DetailViewComponent implements OnInit {
   itemId: string | null = null;
@@ -22,7 +36,7 @@ export class DetailViewComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private sanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.itemId = this.route.snapshot.paramMap.get('id');
@@ -48,7 +62,7 @@ export class DetailViewComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/messages');
   }
 
   getFormatDate(data: any) {
@@ -111,4 +125,141 @@ export class DetailViewComponent implements OnInit {
       })
       .join('\n');
   }
+
+  inputDialogVisible = false;
+  outputDialogVisible = false;
+
+  // Add these properties and methods to your component
+  showInputDialog() {
+    this.inputDialogVisible = true;
+  }
+
+  showOutputDialog() {
+    this.outputDialogVisible = true;
+  }
+
+  truncateMessage(message: string): string {
+    if (!message) return 'NA';
+    const maxLength = 500; // Adjust this value to change the preview length
+    if (message.length <= maxLength) return message;
+    return `${message.substring(0, maxLength)}...`;
+  }
+
+  getTruncatedMessage(message: string | null): SafeHtml {
+    if (!message) return this.sanitizer.bypassSecurityTrustHtml('NA');
+
+    try {
+      let formatted: string;
+
+      // Format the message first
+      if (this.isJson(message)) {
+        formatted = JSON.stringify(JSON.parse(message), null, 2);
+      } else {
+        formatted = this.formatXml(message);
+      }
+
+      // Truncate the formatted message
+      const maxLength = 500;
+      const truncated = formatted.length > maxLength
+        ? `${formatted.substring(0, maxLength)}...`
+        : formatted;
+
+      // Return sanitized HTML
+      return this.sanitizer.bypassSecurityTrustHtml(`<pre>${truncated}</pre>`);
+    } catch (error) {
+      console.error('Error formatting content:', error);
+      return this.sanitizer.bypassSecurityTrustHtml(message);
+    }
+  }
+
+  showToast = false;
+
+  showNotification() {
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide toast after 3 seconds
+  }
+
+  copyRequestId() {
+    const requestId = this.details.requestId;
+    if (requestId) {
+      // Create a temporary input element to hold the text
+      const tempInput = document.createElement('input');
+      tempInput.value = requestId;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999); // Select for mobile devices
+
+      // Copy the text to the clipboard
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      this.showNotification();
+    }
+  }
+
+  downloadInputMessage() {
+    // Get the pretty-printed content as a string (not SafeHtml)
+    const prettyMessage = this.details.inputMessage;
+
+    // Extract plain text if SafeHtml is used
+    let messageContent: string;
+    if (typeof prettyMessage === 'string') {
+      messageContent = prettyMessage;
+    } else {
+      // If it's SafeHtml, we can extract the raw text (sanitize if needed)
+      messageContent = this.sanitizer.sanitize(1, prettyMessage) || '';
+    }
+
+    // Check if the content exists
+    if (!messageContent) {
+      console.error('No content available to download');
+      return;
+    }
+
+    // Create a Blob object with the content
+    const blob = new Blob([messageContent], { type: 'text/plain' });
+
+    // Create a temporary anchor tag to trigger the download
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'input-message.txt'; // Customize the file name if needed
+    document.body.appendChild(a);
+    a.click(); // Trigger the download
+    document.body.removeChild(a); // Remove the temporary anchor tag
+  }
+
+  
+  downloadOutputMessage() {
+    // Get the pretty-printed content as a string (not SafeHtml)
+    const prettyMessage = this.details.outputMessage;
+
+    // Extract plain text if SafeHtml is used
+    let messageContent: string;
+    if (typeof prettyMessage === 'string') {
+      messageContent = prettyMessage;
+    } else {
+      // If it's SafeHtml, we can extract the raw text (sanitize if needed)
+      messageContent = this.sanitizer.sanitize(1, prettyMessage) || '';
+    }
+
+    // Check if the content exists
+    if (!messageContent) {
+      console.error('No content available to download');
+      return;
+    }
+
+    // Create a Blob object with the content
+    const blob = new Blob([messageContent], { type: 'text/plain' });
+
+    // Create a temporary anchor tag to trigger the download
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'output-message.txt'; // Customize the file name if needed
+    document.body.appendChild(a);
+    a.click(); // Trigger the download
+    document.body.removeChild(a); // Remove the temporary anchor tag
+  }
+
+
 }

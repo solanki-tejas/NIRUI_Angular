@@ -6,3 +6,11 @@
   cursor: pointer;
 }
 
+::ng-deep .p-menuitem-link-active {
+  background-color: #FED201 !important;
+}
+
+::ng-deep .active-route>.p-menuitem-content>.p-menuitem-link>.p-menuitem-text {
+  color: #00FFFF !important;
+  font-weight: bold;
+}

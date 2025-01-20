@@ -14,6 +14,7 @@ import {
   generateQueryString,
 } from 'src/app/shared/utils/functions';
 import { SearchSectionComponent } from 'src/app/shared/components/search-section/search-section.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-message-screen',
@@ -29,6 +30,17 @@ import { SearchSectionComponent } from 'src/app/shared/components/search-section
   ],
   templateUrl: './message-screen.component.html',
   styleUrl: './message-screen.component.scss',
+  animations: [
+    trigger('fadeInDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate(
+          '1s 0.2s ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class MessageScreenComponent {
   searchResults: Root[] = [];
