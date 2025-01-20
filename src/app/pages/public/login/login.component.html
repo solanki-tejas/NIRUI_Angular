@@ -1,4 +1,4 @@
-<div class="flex h-full w-full">
+<!-- <div class="flex h-full w-full">
   <div class="flex flex-1 items-center justify-center">
     <p-card
       class="m-4 text-2xl w-[450px]"
@@ -6,7 +6,6 @@
         borderRadius: '20px'
       }"
     >
-      <!-- Logo section -->
       <div class="flex justify-center mb-4">
         <img
           src="../../../../assets/main_logo.jpg"
@@ -54,4 +53,37 @@
       </form>
     </p-card>
   </div>
+</div> -->
+
+<div class="flex h-full w-full">
+  <div class="flex flex-1 items-center justify-center">
+    <p-card
+      class="m-4 text-2xl w-[450px]"
+      [style]="{
+        borderRadius: '20px'
+      }"
+    >
+      <!-- Logo section -->
+      <div class="flex justify-center mb-4">
+        <img
+          src="../../../../assets/main_logo.jpg"
+          alt="Logo"
+          class="h-20 w-auto rounded-md"
+        />
+      </div>
+
+      <h1 class="text-center text-xl">Welcome</h1>
+
+      <!-- Simplified form for Auth0 -->
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="flex flex-col gap-4">
+        <p-button
+          type="submit"
+          label="Login with Auth0"
+          [loading]="submitLoading"
+          styleClass="w-full"
+        />
+      </form>
+    </p-card>
+  </div>
 </div>
+

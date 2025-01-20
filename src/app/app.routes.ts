@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { AuthGuard } from '@auth0/auth0-angular';
 
 export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'home',
@@ -16,7 +16,6 @@ export const routes: Routes = [
             (m) => m.HomeComponent
           ),
       },
-
       {
         path: 'message/:id',
         loadComponent: () =>
