@@ -21,9 +21,24 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 20%">Date</th>
-          <th style="width: 20%">Version</th>
-          <th style="width: 60%">Info</th>
+          <th pSortableColumn="changeDate">
+            <div class="flex items-center">
+              <span>Date</span>
+              <p-sortIcon field="changeDate" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="version">
+            <div class="flex items-center">
+              <span>Version</span>
+              <p-sortIcon field="version" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="info">
+            <div class="flex items-center">
+              <span>Info</span>
+              <p-sortIcon field="info" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-item>

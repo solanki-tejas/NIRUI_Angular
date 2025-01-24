@@ -21,10 +21,30 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 20%">Date</th>
-          <th style="width: 20%">Level</th>
-          <th style="width: 20%">Type</th>
-          <th style="width: 60%">Description</th>
+          <th pSortableColumn="logDate">
+            <div class="flex items-center">
+              <span>Date</span>
+              <p-sortIcon field="logDate" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="logLevel">
+            <div class="flex items-center">
+              <span>Level</span>
+              <p-sortIcon field="logLevel" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="logType">
+            <div class="flex items-center">
+              <span>Type</span>
+              <p-sortIcon field="logType" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="description">
+            <div class="flex items-center">
+              <span>Description</span>
+              <p-sortIcon field="description" class="d-inline"></p-sortIcon>
+            </div>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-item>
