@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <div class="flex item-center gap-5 text-white">
+  <!-- <div class="flex item-center gap-5 text-white">
     <button class="bg-none" (click)="navigateVersion()">
       <h3 class="">{{ lastVersion?.version ?? "" }}</h3>
     </button>
@@ -41,13 +41,16 @@
       class="flex py-3"
       size="small"
     />
-  </div>
-  <!-- <div class="card flex justify-content-center">
-    <p-menu #menu [model]="items" [popup]="true" />
+  </div> -->
+  <div class="card flex justify-content-center">
+    <p-menu #menu [model]="items1" [popup]="true" class="setting-nav" />
     <p-button
+      class="navbar-icon"
       (onClick)="menu.toggle($event)"
-      icon="pi pi-ellipsis-v"
+      iconPos="right"
+      label="{{ userName }}"
+      icon="pi pi-chevron-down"
       severity="info"
     />
-  </div> -->
+  </div>
 </div>

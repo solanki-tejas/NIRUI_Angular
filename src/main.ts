@@ -5,20 +5,29 @@ import { importProvidersFrom } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-// Async function to load config
-async function loadConfig() {
+// Async function to load API config
+async function loadAPIConfig() {
   const response = await fetch('/assets/config.json');
   return response.json();
 }
 
+// Async function to load API config
+// async function loadAuthConfig() {
+//   const response = await fetch('/assets/auth_config.json');
+//   return response.json();
+// }
+
+
 (async () => {
   try {
-    const config = await loadConfig();
+    const apiConfig = await loadAPIConfig();
+    // const authConfig = await loadAuthConfig();
 
     // Inject the loaded config as a provider
     appConfig.providers.push(
       importProvidersFrom(HttpClientModule, BrowserAnimationsModule),
-      { provide: 'APP_CONFIG', useValue: config }
+      { provide: 'API_CONFIG', useValue: apiConfig },
+      // { provide: 'AUTH_CONFIG', useValue: authConfig },
     );
 
     await bootstrapApplication(AppComponent, appConfig);

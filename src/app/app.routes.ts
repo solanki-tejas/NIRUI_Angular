@@ -1,16 +1,17 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { AuthGuard } from '@auth0/auth0-angular';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: 'home',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./pages/private/home/home.component').then(
             (m) => m.HomeComponent
@@ -50,6 +51,13 @@ export const routes: Routes = [
           import(
             './pages/private/api-configuration/api-configuration.component'
           ).then((m) => m.ApiConfigurationComponent),
+      },
+      {
+        path: 'settings/auth-configuration',
+        loadComponent: () =>
+          import(
+            './pages/private/auth-configuration/auth-configuration.component'
+          ).then((m) => m.AuthConfigurationComponent),
       },
       {
         path: '',

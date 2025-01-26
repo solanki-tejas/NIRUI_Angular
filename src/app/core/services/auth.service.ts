@@ -64,7 +64,7 @@ export class AuthService {
   logout(): void {
     this.auth0Service.logout({
       logoutParams: {
-        returnTo: "http://localhost:4200/login"
+        returnTo: window.location.origin
       }
     });
   }

@@ -4,9 +4,10 @@ import { Injectable, Inject } from '@angular/core';
     providedIn: 'root',
 })
 export class ConfigService {
-    constructor(@Inject('APP_CONFIG') private config: any) { }
+    constructor(@Inject('API_CONFIG') private config: any) { }
 
     get apiUrl(): string {
         return this.config.apiUrl;
     }
+    
 }

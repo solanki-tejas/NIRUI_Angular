@@ -7,10 +7,32 @@
 }
 
 ::ng-deep .p-menuitem-link-active {
-  background-color: #FED201 !important;
+  background-color: #fed201 !important;
 }
 
-::ng-deep .active-route>.p-menuitem-content>.p-menuitem-link>.p-menuitem-text {
-  color: #00FFFF !important;
+::ng-deep
+  .active-route
+  > .p-menuitem-content
+  > .p-menuitem-link
+  > .p-menuitem-text {
+  color: #00ffff !important;
   font-weight: bold;
+}
+::ng-deep .navbar-icon button {
+  padding: 0px !important;
+  background: none;
+  border: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .setting-nav .p-menu-overlay {
+  // border: 1px solid #004d85 !important;
+  // width: 120px !important;
+  top: 60px !important;
+  // left: 1018.79px !important;
+}
+
+::ng-deep .setting-nav .p-menu {
+  // width: 140px !important;
 }

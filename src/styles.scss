@@ -17,7 +17,7 @@ body {
   // width: 100vw;
 }
 
-body>* {
+body > * {
   font-family: Poppins !important;
 }
 
@@ -69,7 +69,6 @@ body>* {
   .p-menuitem-text {
     font-size: 14px;
   }
-
 }
 
 pre {
@@ -90,8 +89,10 @@ thead tr th {
   height: 85vh !important;
 }
 
-
-p-sorticon svg{
+p-sorticon svg {
   color: lightgrey !important;
 }
 
+.p-menuitem-icon::before {
+  font-family: "primeicons" !important;
+}

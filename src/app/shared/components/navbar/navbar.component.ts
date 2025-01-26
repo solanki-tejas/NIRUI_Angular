@@ -180,7 +180,7 @@
 
 import { Component, SimpleChanges } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+// import { AuthService } from '../../../core/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
@@ -189,6 +189,9 @@ import { MenubarModule } from 'primeng/menubar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/core/services/api.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-navbar',
@@ -206,14 +209,19 @@ import { ApiService } from 'src/app/core/services/api.service';
 })
 export class NavbarComponent {
   items: MenuItem[] = [];
+  items1: MenuItem[] = [];
   lastVersion: any;
+  userProfile$: Observable<any>;
+  userName: String;
+  userMenuItems: MenuItem[] = [];
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
   ) {
     this.initializeMenuItems();
+    this.userProfile$ = this.authService.user$;
   }
 
   private initializeMenuItems() {
@@ -256,14 +264,30 @@ export class NavbarComponent {
               this.routeToPage('settings/api-configuration');
             },
           },
+          {
+            label: 'Auth Configuration',
+            route: 'settings/auth-configuration',
+            command: () => {
+              this.routeToPage('settings/auth-configuration');
+            },
+          },
         ],
       },
     ];
+    this.items1 = [
+      {
+        label: 'Logout',
+        icon:'pi pi-sign-out',
+        command: () => {
+          this.logout();
+        },
+      },
+    ]
   }
 
   ngOnInit() {
     this.updateActiveClasses(); // Initial setup
-    
+
     // Subscribe to router events
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -274,6 +298,17 @@ export class NavbarComponent {
     });
 
     this.fetchLastVersion();
+
+    this.authService.user$.subscribe(user => {
+      this.userName = user?.name || 'User';
+
+      this.userMenuItems = [
+        {
+          label: 'Logout',
+          command: () => this.logout()
+        }
+      ];
+    });
   }
 
   private fetchLastVersion() {
@@ -295,22 +330,22 @@ export class NavbarComponent {
 
   updateActiveClasses() {
     const currentUrl = this.router.url;
-    
+
     const updateItem = (item: any) => {
       // Remove existing style class
       item.styleClass = '';
-      
+
       // Check if current URL matches the route
       if (currentUrl.includes(item.route)) {
         item.styleClass = 'active-route';
       }
-      
+
       // Process nested items
       if (item.items) {
         item.items.forEach(subItem => {
           // Remove existing style class
           subItem.styleClass = '';
-          
+
           if (currentUrl.includes(subItem.route)) {
             subItem.styleClass = 'active-route';
             // Also mark parent as active if child is active

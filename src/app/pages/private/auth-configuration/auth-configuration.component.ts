@@ -1,15 +1,16 @@
-import { animate, style, transition, trigger } from '@angular/animations';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import authData from '../../../../assets/auth_config.json'
 import { ApiService } from 'src/app/core/services/api.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: 'app-api-configuration',
+  selector: 'app-auth-configuration',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './api-configuration.component.html',
-  styleUrl: './api-configuration.component.scss',
+  templateUrl: './auth-configuration.component.html',
+  styleUrl: './auth-configuration.component.scss',
   animations: [
     trigger('fadeInDown', [
       transition(':enter', [
@@ -22,16 +23,16 @@ import { ApiService } from 'src/app/core/services/api.service';
     ]),
   ],
 })
-export class ApiConfigurationComponent {
+export class AuthConfigurationComponent implements OnInit {
   loading: boolean = false;
-  apiConfigData = {};
+  authConfigData = {};
 
   constructor(private apiService: ApiService, private router: Router) { }
 
   fetchAPIConfigData() {
     this.loading = true;
-    this.apiService.getAPIConfig().subscribe((data) => {
-      this.apiConfigData = data;
+    this.apiService.getAuthConfig().subscribe((data) => {
+      this.authConfigData = data;
       this.loading = false;
     });
   }
