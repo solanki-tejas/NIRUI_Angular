@@ -10,7 +10,7 @@ const auth0Config: AuthConfig = {
   domain: AuthData.domain,
   clientId: AuthData.clientId,  
   authorizationParams: {
-    redirect_uri: window.location.origin,
+    redirect_uri: "https://192.168.29.19:4200",
   },
   cacheLocation: 'localstorage', // Now correctly typed
   useRefreshTokens: true,
